@@ -94,5 +94,18 @@ namespace TutHub.Models
             return new object[]{ usr_id, f_name, l_name, (int)u_Gender, password, is_student, is_teacher, photo_url, language_pref };
         }
 
+        public void FromArray(List<object> lst)
+        {
+            Usr_id = (string)lst[0];
+            F_Name = (string)lst[1];
+            L_Name = (string)lst[2];
+            U_Gender = (Gender)lst[3];
+            //password = (string)lst[4];
+            is_student = (int)lst[5];
+            is_teacher = (int)lst[6];
+            PhotoUrl = (string)lst[7];
+            LanguagePref = (int)lst[8];
+        }
+
     }
 }

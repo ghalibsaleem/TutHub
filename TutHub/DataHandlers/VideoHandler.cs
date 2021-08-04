@@ -111,7 +111,7 @@ namespace TutHub.DataHandlers
         }
 
 
-        //Need Attention
+        //Need Attention beacuse of multiple hits on Db
         public async Task<List<bool>> InsertListVideo(List<Video> lstVideo)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
@@ -143,22 +143,23 @@ namespace TutHub.DataHandlers
         }
 
 
-        //TODO
-        public async Task<Video> UpdateVideo(Video course)
+        
+        public async Task<Video> UpdateVideo(Video video)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
-                string sqlStr = String.Format("update Courses set usr_id='{0}', f_name, l_name, gender, u_password, is_student, is_teacher, photo_url, language_pref) " +
-                    "values('{0}','{1}','{2}',{3},'{4}',{5},{6},'{7}',{8});", course.ToArray());
+                string sqlStr = String.Format("update Videos " +
+                    "set name = '{1}', description='{2}', tag='{3}', course_id= {4}, date_created = '{5}', video_url='{6}'  " +
+                    "where video_id={0}", video.ToArray());
 
                 using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))
                 {
                     if (await cmd.ExecuteNonQueryAsync() == 1)
                     {
-                        return course;
+                        return video;
                     }
                 }
             }

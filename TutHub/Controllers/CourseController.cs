@@ -24,6 +24,15 @@ namespace TutHub.Controllers
             return course;
         }
 
+
+        [HttpGet("/Course/{id}/Video")]
+        public async Task<List<Video>> GetList(int id, [FromServices] IConfiguration config)
+        {
+            VideoHandler videoHandler = new VideoHandler(config);
+            var video = await videoHandler.GetVideoList(id);
+            return video;
+        }
+
         // POST api/<CourseController>
         [HttpPost]
         public async Task<Course> Post(Course course ,[FromServices] IConfiguration config)

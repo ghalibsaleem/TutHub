@@ -33,6 +33,17 @@ namespace TutHub.Controllers
             return validUser;
         }
 
+
+        [HttpPut("updatepassword")]
+        public async Task<bool> UpdatePassword(string username, string oldpassword, string newpassword, [FromServices] IConfiguration config)
+        {
+            UserHandler userHandler = new UserHandler(config);
+            var validUser = await userHandler.UpdatePassword(username, oldpassword, newpassword);
+
+            return validUser;
+        }
+
+
         [HttpDelete("{id}")]
         public async Task<bool> Delete(string id, [FromServices] IConfiguration config)
         {

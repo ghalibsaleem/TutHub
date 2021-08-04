@@ -80,8 +80,9 @@ namespace TutHub.DataHandlers
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
-                string sqlStr = String.Format("update Courses set usr_id='{0}', f_name, l_name, gender, u_password, is_student, is_teacher, photo_url, language_pref) " +
-                    "values('{0}','{1}','{2}',{3},'{4}',{5},{6},'{7}',{8});", course.ToArray());
+                string sqlStr = String.Format("update Courses " +
+                    "set name = '{1}', description='{2}', tag='{3}', owner_id= {4}, date_created = '{5}'  " +
+                    "where course_id={0}", course.ToArray());
 
                 using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))
                 {
