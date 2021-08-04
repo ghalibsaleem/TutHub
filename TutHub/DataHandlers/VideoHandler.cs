@@ -51,6 +51,44 @@ namespace TutHub.DataHandlers
             return null;
         }
 
+
+        public async Task<List<Video>> GetVideoList(int course_id)
+        {
+
+            string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
+
+            List<Video> lstVideos = new List<Video>();
+
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            {
+
+                await conn.OpenAsync();
+
+                string sqlStr = String.Format("select * from Videos where course_id={0}", course_id);
+                using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))
+                {
+
+                    using (var sqlDataReader = await cmd.ExecuteReaderAsync())
+                    {
+
+                        while (await sqlDataReader.ReadAsync())
+                        {
+                            List<object> list = new List<object>();
+
+                            for (int i = 0; i < sqlDataReader.FieldCount; i++)
+                            {
+                                list.Add(sqlDataReader[i]);
+                            }
+                            Video video = new Video();
+                            video.FromArray(list);
+                            lstVideos.Add(video);
+                        }
+                    }
+                }
+            }
+            return lstVideos;
+        }
+
         public async Task<Video> InsertVideo(Video video)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");

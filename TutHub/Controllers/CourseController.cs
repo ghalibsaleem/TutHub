@@ -34,7 +34,7 @@ namespace TutHub.Controllers
         }
 
         // PUT api/<CourseController>/5
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<Course> Update(Course course, [FromServices] IConfiguration config)
         {
             CourseHandler courseHandler = new CourseHandler(config);
