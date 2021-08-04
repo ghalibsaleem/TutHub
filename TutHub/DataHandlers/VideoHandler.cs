@@ -16,7 +16,7 @@ namespace TutHub.DataHandlers
             _config = config;
         }
 
-        public async Task<Video> GetCourse(int id)
+        public async Task<Video> GetVideo(int id)
         {
 
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
@@ -51,7 +51,7 @@ namespace TutHub.DataHandlers
             return null;
         }
 
-        public async Task<Video> InsertCourse(Video video)
+        public async Task<Video> InsertVideo(Video video)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
@@ -74,7 +74,7 @@ namespace TutHub.DataHandlers
 
 
         //Need Attention
-        public async Task<List<bool>> InsertListCourse(List<Video> lstVideo)
+        public async Task<List<bool>> InsertListVideo(List<Video> lstVideo)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
             List<bool> lstResult = new List<bool>();
@@ -106,7 +106,7 @@ namespace TutHub.DataHandlers
 
 
         //TODO
-        public async Task<Video> UpdateCourse(Video course)
+        public async Task<Video> UpdateVideo(Video course)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
@@ -127,7 +127,7 @@ namespace TutHub.DataHandlers
             return null;
         }
 
-        public async Task<bool> DeleteCourse(int id)
+        public async Task<bool> DeleteVideo(int id)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 

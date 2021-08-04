@@ -24,7 +24,7 @@ namespace TutHub.Controllers
             return result;
         }
 
-        [HttpPut("/update")]
+        [HttpPut("update")]
         public async Task<User> update(User user, [FromServices] IConfiguration config)
         {
             UserHandler userHandler = new UserHandler(config);
