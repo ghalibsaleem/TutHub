@@ -89,13 +89,27 @@ namespace TutHub.DataHandlers
             return lstVideos;
         }
 
-        public async Task<Video> InsertVideo(Video video)
+        public async Task<Video> InsertVideo(Video video, string ownerId)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
+
+                string sqlStrCheck = String.Format("select * from Courses where course_id={0} and owner_id = '{1}'", video.CourseId, ownerId);
+
+                using (MySqlCommand cmd = new MySqlCommand(sqlStrCheck, conn))
+                {
+                    using (var sqlDataReader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (!sqlDataReader.HasRows)
+                        {
+                            return null;
+                        }
+                    }
+                }
+
                 string sqlStr = String.Format("insert into Videos (video_id, name, description, tag, course_id, date_created, video_url) " +
                     "values({0},'{1}','{2}','{3}',{4},'{5}','{6}'); ", video.ToArray());
 
@@ -112,13 +126,26 @@ namespace TutHub.DataHandlers
 
 
         //Need Attention beacuse of multiple hits on Db
-        public async Task<List<bool>> InsertListVideo(List<Video> lstVideo)
+        public async Task<List<bool>> InsertListVideo(List<Video> lstVideo, string ownerId)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
             List<bool> lstResult = new List<bool>();
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
+
+                string sqlStrCheck = String.Format("select * from Courses where course_id={0} and owner_id = '{1}'", lstVideo[0].CourseId, ownerId);
+
+                using (MySqlCommand cmd = new MySqlCommand(sqlStrCheck, conn))
+                {
+                    using (var sqlDataReader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (!sqlDataReader.HasRows)
+                        {
+                            return null;
+                        }
+                    }
+                }
 
                 foreach (var video in lstVideo)
                 {
@@ -144,13 +171,28 @@ namespace TutHub.DataHandlers
 
 
         
-        public async Task<Video> UpdateVideo(Video video)
+        public async Task<Video> UpdateVideo(Video video, string ownerId)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
+
+                string sqlStrCheck = String.Format("select * from Courses where course_id={0} and owner_id = '{1}'", video.CourseId, ownerId);
+
+                using (MySqlCommand cmd = new MySqlCommand(sqlStrCheck, conn))
+                {
+                    using (var sqlDataReader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (!sqlDataReader.HasRows)
+                        {
+                            return null;
+                        }
+                    }
+                }
+
+
                 string sqlStr = String.Format("update Videos " +
                     "set name = '{1}', description='{2}', tag='{3}', course_id= {4}, date_created = '{5}', video_url='{6}'  " +
                     "where video_id={0}", video.ToArray());
@@ -166,13 +208,27 @@ namespace TutHub.DataHandlers
             return null;
         }
 
-        public async Task<bool> DeleteVideo(int id)
+        public async Task<bool> DeleteVideo(int id, string ownerId)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
+                string sqlStrCheck = String.Format("select * from Courses where course_id={0} and owner_id = '{1}'", id, ownerId);
+
+                using (MySqlCommand cmd = new MySqlCommand(sqlStrCheck, conn))
+                {
+                    using (var sqlDataReader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (!sqlDataReader.HasRows)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+
                 string sqlStr = String.Format("delete from Video where course_id={0}", id);
 
                 using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))

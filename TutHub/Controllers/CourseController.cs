@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TutHub.DataHandlers;
 using TutHub.Models;
@@ -16,54 +17,89 @@ namespace TutHub.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        // GET api/<CourseController>/5
+        
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<Course> Get(int id,[FromServices] IConfiguration config)
+        public async Task<ActionResult<APIResponse<Course>>> Get(int id,[FromServices] IConfiguration config)
         {
+            
             CourseHandler courseHandler = new CourseHandler(config);
-            var course = await courseHandler.GetCourse(id);
-            return course;
+            APIResponse<Course> aPIResponse = new APIResponse<Course>
+            {
+                Data = await courseHandler.GetCourse(id)
+            };
+            
+            return aPIResponse;
         }
 
         [Authorize]
         [HttpGet("/Course/{id}/Video")]
-        public async Task<List<Video>> GetList(int id, [FromServices] IConfiguration config)
+        public async Task<ActionResult<APIResponse<List<Video>>>> GetList(int id, [FromServices] IConfiguration config)
         {
             VideoHandler videoHandler = new VideoHandler(config);
-            var video = await videoHandler.GetVideoList(id);
-            return video;
+            
+            APIResponse<List<Video>> aPIResponse = new APIResponse<List<Video>>
+            {
+                Data = await videoHandler.GetVideoList(id)
+            };
+            return aPIResponse;
         }
 
-        // POST api/<CourseController>
+        
         [Authorize]
         [HttpPost]
-        public async Task<Course> Post(Course course ,[FromServices] IConfiguration config)
+        public async Task<ActionResult<APIResponse<Course>>> Post(Course course ,[FromServices] IConfiguration config)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                course.OwnerId = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             CourseHandler courseHandler = new CourseHandler(config);
-            var newCourse =  await courseHandler.InsertCourse(course);
-            return newCourse;
+            
+            APIResponse<Course> aPIResponse = new APIResponse<Course>
+            {
+                Data = await courseHandler.InsertCourse(course)
+            };
+            return aPIResponse;
         }
 
-        // PUT api/<CourseController>/5
+        
         [Authorize]
         [HttpPut("update")]
-        public async Task<Course> Update(Course course, [FromServices] IConfiguration config)
+        public async Task<ActionResult<APIResponse<Course>>> Update(Course course, [FromServices] IConfiguration config)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                course.OwnerId = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             CourseHandler courseHandler = new CourseHandler(config);
-            var result = await courseHandler.UpdateCourse(course);
-
-            return result;
+            APIResponse<Course> aPIResponse = new APIResponse<Course>
+            {
+                Data = await courseHandler.UpdateCourse(course)
+            };
+            return aPIResponse;
         }
 
-        // DELETE api/<CourseController>/5
+        
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<bool> Delete(int id, [FromServices] IConfiguration config)
+        public async Task<ActionResult<APIResponse<bool>>> Delete(int id, [FromServices] IConfiguration config)
         {
+            string ownerId = "";
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                ownerId = identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             CourseHandler courseHandler = new CourseHandler(config);
-            var result = await courseHandler.DeleteCourse(id);
-            return result;
+            
+            APIResponse<bool> aPIResponse = new APIResponse<bool>
+            {
+                Data = await courseHandler.DeleteCourse(id, ownerId)
+            };
+            return aPIResponse;
         }
     }
 }

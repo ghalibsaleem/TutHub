@@ -51,7 +51,6 @@ namespace TutHub.DataHandlers
             return null;
         }
 
-
         public async Task<Course> InsertCourse(Course course)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
@@ -82,7 +81,7 @@ namespace TutHub.DataHandlers
                 await conn.OpenAsync();
                 string sqlStr = String.Format("update Courses " +
                     "set name = '{1}', description='{2}', tag='{3}', owner_id= {4}, date_created = '{5}'  " +
-                    "where course_id={0}", course.ToArray());
+                    "where course_id={0} and owner_id = '{4}'", course.ToArray());
 
                 using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))
                 {
@@ -95,14 +94,14 @@ namespace TutHub.DataHandlers
             return null;
         }
 
-        public async Task<bool> DeleteCourse(int id)
+        public async Task<bool> DeleteCourse(int id, string ownerId)
         {
             string connString = _config.GetValue<string>("ConnectionStrings:TutHub_DB");
 
             using (MySqlConnection conn = new MySqlConnection(connString))
             {
                 await conn.OpenAsync();
-                string sqlStr = String.Format("delete from Courses where course_id={0}", id);
+                string sqlStr = String.Format("delete from Courses where course_id={0} and owner_id = '{1}'", id, ownerId);
 
                 using (MySqlCommand cmd = new MySqlCommand(sqlStr, conn))
                 {

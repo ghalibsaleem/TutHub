@@ -28,7 +28,7 @@ namespace TutHub.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId,user.Usr_id)
+                new Claim(JwtRegisteredClaimNames.NameId,user.usr_id)
             };
 
             var cred = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
