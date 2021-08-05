@@ -53,17 +53,17 @@ namespace TutHub.Models
             set { password = value; }
         }
 
-        private int is_student;
+        private bool is_student;
 
-        public int IsStudent
+        public bool IsStudent
         {
             get { return is_student; }
             set { is_student = value; }
         }
 
-        private int is_teacher;
+        private bool is_teacher;
 
-        public int IsTeacher
+        public bool IsTeacher
         {
             get { return is_teacher; }
             set { is_teacher = value; }
@@ -99,10 +99,10 @@ namespace TutHub.Models
             Usr_id = (string)lst[0];
             F_Name = (string)lst[1];
             L_Name = (string)lst[2];
-            U_Gender = (Gender)lst[3];
+            U_Gender = (Gender)(int.Parse((string)lst[3]));
             //password = (string)lst[4];
-            is_student = (int)lst[5];
-            is_teacher = (int)lst[6];
+            is_student = (bool)lst[5];
+            is_teacher = (bool)lst[6];
             PhotoUrl = (string)lst[7];
             LanguagePref = (int)lst[8];
         }

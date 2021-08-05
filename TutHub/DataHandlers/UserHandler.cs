@@ -47,7 +47,7 @@ namespace TutHub.DataHandlers
 
                             User user = new User();
                             user.FromArray(lst);
-
+                            return user;
                         }
                     }
                 }

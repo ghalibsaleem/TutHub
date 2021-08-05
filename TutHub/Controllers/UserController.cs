@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -16,16 +17,18 @@ namespace TutHub.Controllers
     {
 
         //TODO
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<bool> Get(string id, [FromServices] IConfiguration config)
+        public async Task<ActionResult<bool>> Get(string id, [FromServices] IConfiguration config)
         {
             UserHandler userHandler = new UserHandler(config);
             var result = await userHandler.Delete(id);
             return result;
         }
 
+        [Authorize]
         [HttpPut("update")]
-        public async Task<User> update(User user, [FromServices] IConfiguration config)
+        public async Task<ActionResult<User>> update(User user, [FromServices] IConfiguration config)
         {
             UserHandler userHandler = new UserHandler(config);
             var validUser = await userHandler.Update(user);
@@ -33,7 +36,7 @@ namespace TutHub.Controllers
             return validUser;
         }
 
-
+        [Authorize]
         [HttpPut("updatepassword")]
         public async Task<bool> UpdatePassword(string username, string oldpassword, string newpassword, [FromServices] IConfiguration config)
         {
@@ -43,7 +46,7 @@ namespace TutHub.Controllers
             return validUser;
         }
 
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(string id, [FromServices] IConfiguration config)
         {

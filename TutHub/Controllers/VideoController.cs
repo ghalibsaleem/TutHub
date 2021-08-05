@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -15,6 +16,7 @@ namespace TutHub.Controllers
     public class VideoController : ControllerBase
     {
         // GET api/<CourseController>/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<Video> Get(int id, [FromServices] IConfiguration config)
         {
@@ -24,6 +26,7 @@ namespace TutHub.Controllers
         }
 
         // POST api/<CourseController>
+        [Authorize]
         [HttpPost]
         public async Task<Video> Post(Video video, [FromServices] IConfiguration config)
         {
@@ -32,6 +35,7 @@ namespace TutHub.Controllers
             return newVideo;
         }
 
+        [Authorize]
         [HttpPost("insertlist")]
         public async Task<List<bool>> PostList(List<Video> lstvideo, [FromServices] IConfiguration config)
         {
@@ -42,6 +46,7 @@ namespace TutHub.Controllers
 
 
         // PUT api/<CourseController>/5
+        [Authorize]
         [HttpPut("update")]
         public async Task<Video> update(Video video, [FromServices] IConfiguration config)
         {
@@ -51,6 +56,7 @@ namespace TutHub.Controllers
         }
 
         // DELETE api/<CourseController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id, [FromServices] IConfiguration config)
         {

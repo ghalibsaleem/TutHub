@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,9 @@ namespace TutHub.Controllers
     [Route("/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
-    {  
+    {
         // GET api/<CourseController>/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<Course> Get(int id,[FromServices] IConfiguration config)
         {
@@ -24,7 +26,7 @@ namespace TutHub.Controllers
             return course;
         }
 
-
+        [Authorize]
         [HttpGet("/Course/{id}/Video")]
         public async Task<List<Video>> GetList(int id, [FromServices] IConfiguration config)
         {
@@ -34,6 +36,7 @@ namespace TutHub.Controllers
         }
 
         // POST api/<CourseController>
+        [Authorize]
         [HttpPost]
         public async Task<Course> Post(Course course ,[FromServices] IConfiguration config)
         {
@@ -43,6 +46,7 @@ namespace TutHub.Controllers
         }
 
         // PUT api/<CourseController>/5
+        [Authorize]
         [HttpPut("update")]
         public async Task<Course> Update(Course course, [FromServices] IConfiguration config)
         {
@@ -53,6 +57,7 @@ namespace TutHub.Controllers
         }
 
         // DELETE api/<CourseController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id, [FromServices] IConfiguration config)
         {

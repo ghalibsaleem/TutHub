@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TutHub.Extensions;
+using TutHub.Interfaces.Authentication;
+using TutHub.Services;
 
 namespace TutHub
 {
@@ -27,15 +30,17 @@ namespace TutHub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddApplicationServices(Configuration);
             services.AddControllers();
             
             //services.Add(new ServiceDescriptor(typeof(MySqlConnection), new MySqlConnection(Configuration.GetConnectionString("TutHub_DB"))));
-            services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:TutHub_DB"]));
+            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:TutHub_DB"]));
             services.AddSwaggerGen(c =>
-            {
+            {   
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TutHub", Version = "v1" });
             });
+
+            services.AddIdentityServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,9 +53,13 @@ namespace TutHub
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TutHub v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44313"));
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
